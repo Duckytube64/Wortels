@@ -7,8 +7,7 @@ using System.Numerics;
 
 class Program
 {
-    BigInteger m, p, q, a;
-    BigInteger[] av;
+    BigInteger m, p, q, a, ap, aq;
 
     static void Main(string[] args)
     {
@@ -24,37 +23,47 @@ class Program
         p = BigInteger.Parse(Console.ReadLine());   // = 4-voud - 1
         q = BigInteger.Parse(Console.ReadLine());   // = 4-voud - 1
         a = BigInteger.Parse(Console.ReadLine());
-        av = new BigInteger[2];
-        av[0] = (a % p) % m;
-        av[1] = (a % q) & m;
+        ap = (a % p) % m;
+        aq = (a % q) & m;
     }
 
     void Calculate()
     {
-        BigInteger big, small;
-        if (p > q)
-        {
-            big = p;
-            small = q;
-        }
-        else
-        {
-            big = q;
-            small = p;
-        }
-        BigInteger[] Euclidians = ExtEuclides(big, small);
+        ap = BigInteger.ModPow(ap, (p + 1) / 4, p);
+        aq = BigInteger.ModPow(aq, (q + 1) / 4, q);
+
+        BigInteger[] Euclidians = ExtEuclides(p, q);
         BigInteger Wp = Euclidians[1], Wq = Euclidians[0];
         if (Wp < 0)
-            Wp = m - Wp;
+            Wp = m + Wp;
         if (Wq < 0)
-            Wq = m - Wq;
+            Wq = m + Wq;
+
+        List<BigInteger> apaq = new List<BigInteger>();
+        apaq.Add((ap * Wp + aq * Wq) % m);
+        apaq.Add((ap * Wp - aq * Wq) % m);
+        apaq.Add((-ap * Wp + aq * Wq) % m);
+        apaq.Add((-ap * Wp - aq * Wq) % m);
+
+        for (int i = 0; i < apaq.Count; i++)
+        {
+            if (apaq.ElementAt(i) < 0)
+                apaq[i] = m + apaq[i];
+        }
+
+        apaq.Sort();
+
+        for (int i = 0; i < apaq.Count; i++)
+        {
+            Console.WriteLine(apaq.ElementAt(i));
+        }
     }
 
-    BigInteger[] ExtEuclides(BigInteger big, BigInteger small)
+    BigInteger[] ExtEuclides(BigInteger first, BigInteger second)
     {
         BigInteger[] ggd = new BigInteger[2];
 
-        BigInteger x = big, y = small, result = 0, divd, xn = 1, x0 = 1, x1 = 0, yn = 1, y0 = 0, y1 = 1;
+        BigInteger x = first, y = second, result = 0, divd, xn = 1, x0 = 1, x1 = 0, yn = 1, y0 = 0, y1 = 1;
 
         while (result != 1)
         {
@@ -70,8 +79,8 @@ class Program
             x = y;
             y = result;
         }
-        ggd[0] = xn * big;
-        ggd[1] = yn * small;
+        ggd[0] = xn * first;
+        ggd[1] = yn * second;
         return ggd;
     }
 }
