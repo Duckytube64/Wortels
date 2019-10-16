@@ -33,7 +33,7 @@ class Program
         aq = BigInteger.ModPow(aq, (q + 1) / 4, q);
 
         BigInteger[] Euclidians = ExtEuclides(p, q);
-        BigInteger Wp = Euclidians[1], Wq = Euclidians[0];
+        BigInteger Wp = Euclidians[0], Wq = Euclidians[1];
         if (Wp < 0)
             Wp = m + Wp;
         if (Wq < 0)
@@ -59,11 +59,12 @@ class Program
         }
     }
 
+    // Gaat hier fout
     BigInteger[] ExtEuclides(BigInteger first, BigInteger second)
     {
         BigInteger[] ggd = new BigInteger[2];
 
-        BigInteger x = first, y = second, result = 0, divd, xn = 1, x0 = 1, x1 = 0, yn = 1, y0 = 0, y1 = 1;
+        BigInteger x = BigInteger.Max(first, second), y = BigInteger.Min(first, second), result = 0, divd, xn = 1, x0 = 1, x1 = 0, yn = 1, y0 = 0, y1 = 1;
 
         while (result != 1)
         {
@@ -79,8 +80,8 @@ class Program
             x = y;
             y = result;
         }
-        ggd[0] = xn * first;
-        ggd[1] = yn * second;
+        ggd[0] = yn;
+        ggd[1] = xn;        
         return ggd;
     }
 }
