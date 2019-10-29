@@ -23,8 +23,8 @@ class Program
         p = BigInteger.Parse(Console.ReadLine());   // = 4-voud - 1
         q = BigInteger.Parse(Console.ReadLine());   // = 4-voud - 1
         a = BigInteger.Parse(Console.ReadLine());
-        ap = (a % p) % m;
-        aq = (a % q) & m;
+        ap = (a % p);
+        aq = (a % q);
     }
 
     void Calculate()
@@ -33,7 +33,17 @@ class Program
         aq = BigInteger.ModPow(aq, (q + 1) / 4, q);
 
         BigInteger[] Euclidians = ExtEuclides(p, q);
-        BigInteger Wp = Euclidians[0], Wq = Euclidians[1];
+        BigInteger Wp, Wq;
+        if (p > q)
+        {
+            Wp = Euclidians[0] * q;
+            Wq = Euclidians[1] * p;
+        }
+        else
+        {
+            Wp = Euclidians[1] * q;
+            Wq = Euclidians[0] * p;
+        }
         if (Wp < 0)
             Wp = m + Wp;
         if (Wq < 0)
